@@ -37,6 +37,55 @@
                   <v-col
                     cols="12"
                     sm="6"
+                    md="12"
+                  >
+                    <v-text-field
+                      v-model="editedItem.name"
+                      :rules="[ rules.required ]"
+                      counter="50"
+                      maxlength="50"
+                      label="Project Name"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="3"
+                  >
+                    <v-text-field
+                      v-model.number="formattedRate"
+                      :rules="[ rules.required ]"
+                      type="number"
+                      label="Rate"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="3"
+                  >
+                    <v-text-field
+                      v-model.number="formattedMonths"
+                      :rules="[ rules.required ]"
+                      type="number"
+                      label="Months"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-select
+                      :items="['Balloon', 'Equal']"
+                      :rules="[ rules.required ]"
+                      v-model="editedItem.repayment_type"
+                      label="Repayment Type"
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
                     md="3"
                   >
                     <v-menu
@@ -47,17 +96,16 @@
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           :value="formattedDate"
-                          :rules="[ rules.required ]"
                           clearable
                           readonly
                           v-bind="attrs"
-                          label="Date"
+                          label="Funded Date"
                           v-on="on"
-                          @click:clear="editedItem.date = null"
+                          @click:clear="editedItem.funded_date = null"
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="editedItem.date"
+                        v-model="editedItem.funded_date"
                         @change="datePicker = false"
                       ></v-date-picker>
                     </v-menu>
@@ -65,81 +113,25 @@
                   <v-col
                     cols="12"
                     sm="6"
-                    md="9"
+                    md="3"
                   >
                     <v-text-field
-                      v-model="editedItem.details"
+                      v-model.number="formattedSellingPrice"
+                      type="number"
+                      label="Selling Price"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-text-field
+                      v-model="editedItem.link"
                       :rules="[ rules.counter ]"
-                      counter="25"
-                      maxlength="25"
-                      label="Details"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="3"
-                  >
-                    <v-text-field
-                      v-model.number="formattedTopUp"
-                      type="number"
-                      label="Top Up"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="3"
-                  >
-                    <v-text-field
-                      v-model.number="formattedWithdrawal"
-                      type="number"
-                      label="Withdrawal"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="3"
-                  >
-                    <v-text-field
-                      v-model.number="formattedIncentives"
-                      type="number"
-                      label="Incentives"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="3"
-                  >
-                    <v-text-field
-                      v-model.number="formattedNetPayout"
-                      type="number"
-                      label="Net Payout"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="9"
-                  >
-                    <v-select
-                      :items="getProjects()"
-                      v-model="editedItem.project_name"
-                      label="Project"
-                    ></v-select>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="3"
-                  >
-                    <v-text-field
-                      v-model.number="formattedInvestedAmount"
-                      type="number"
-                      label="Invested Amount"
-                      :disabled="editedItem.project_name == null"
+                      counter="50"
+                      maxlength="50"
+                      label="Link"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -214,7 +206,7 @@
 
 <script>
   export default {
-    name: 'TransactionsDatatable',
+    name: 'ProjectsDatatable',
 
     props: [
       'data',
@@ -229,31 +221,27 @@
         search: '',
         editedIndex: -1,
         editedItem: {
-          date: moment(new Date).format('YYYY-MM-DD'),
-          details: '',
-          top_up: null,
-          withdrawal: null,
-          incentives: null,
-          net_payout: null,
-          project_name: null,
-          invested_amount: null,
-          net_earnings: null
+          name: null,
+          rate: null,
+          months: null,
+          repayment_type: null,
+          selling_price: null,
+          link: '',
+          funded_date: null,
         },
         datePicker: false,
         defaultItem: {
-          date: moment(new Date).format('YYYY-MM-DD'),
-          details: '',
-          top_up: null,
-          withdrawal: null,
-          incentives: null,
-          net_payout: null,
-          project_name: null,
-          invested_amount: null,
-          net_earnings: null
+          name: null,
+          rate: null,
+          months: null,
+          repayment_type: null,
+          selling_price: null,
+          link: '',
+          funded_date: null,
         },
         rules: {
           required: value => !!value || 'Required.',
-          counter: value => value.length <= 25 || 'Max 25 characters',
+          counter: value => value.length <= 50 || 'Max 50 characters',
         }
       }
     },
@@ -268,11 +256,11 @@
     },
 
     created () {
-      this.rebuildDatatable();
+      this.initialize();
     },
 
     methods: {
-      rebuildDatatable () {
+      initialize () {
         this.items = this.data;
       },
 
@@ -310,11 +298,15 @@
       },
 
       validate(data) {
-        if (data.date === null) {
+        if (data.name === null || data.name === '') {
           return true;
         }
 
-        if (data.details.length > 25) {
+        if (data.months === null || data.months === '') {
+          return true;
+        }
+
+        if (data.rate === null || data.rate === '') {
           return true;
         }
 
@@ -334,16 +326,6 @@
           this.items.push(this.editedItem)
         }
         this.close()
-      },
-
-      getProjects () {
-        return [
-          'Project 1',
-          'Project 2',
-          'Project 3',
-          'Project 4',
-          'Project 5'
-        ];
       }
     },
 
@@ -352,36 +334,20 @@
         return this.editedIndex === -1 ? 'New Row' : 'Edit Row'
       },
       formattedDate () {
-        return this.editedItem.date ? moment(this.editedItem.date).format('YYYY-MM-DD') : ''
+        return this.editedItem.funded_date ? moment(this.editedItem.funded_date).format('YYYY-MM-DD') : ''
       },
-      formattedTopUp: {
-        get () { return this.editedItem.top_up },
-        set (newVal) { this.editedItem.top_up = newVal }
+      formattedRate: {
+        get () { return this.editedItem.rate },
+        set (newVal) { this.editedItem.rate = newVal }
       },
-      formattedWithdrawal: {
-        get () { return this.editedItem.withdrawal },
-        set (newVal) { this.editedItem.withdrawal = newVal }
+      formattedMonths: {
+        get () { return this.editedItem.months },
+        set (newVal) { this.editedItem.months = newVal }
       },
-      formattedIncentives: {
-        get () { return this.editedItem.incentives },
-        set (newVal) { this.editedItem.incentives = newVal }
+      formattedSellingPrice: {
+        get () { return this.editedItem.selling_price },
+        set (newVal) { this.editedItem.selling_price = newVal }
       },
-      formattedNetPayout: {
-        get () { return this.editedItem.net_payout },
-        set (newVal) { this.editedItem.net_payout = newVal }
-      },
-      formattedRemainingPayout: {
-        get () { return this.editedItem.remaining_payout },
-        set (newVal) { this.editedItem.remaining_payout = newVal }
-      },
-      formattedInvestedAmount: {
-        get () { return this.editedItem.invested_amount },
-        set (newVal) { this.editedItem.invested_amount = newVal }
-      },
-      formattedNetEarnings: {
-        get () { return this.editedItem.net_earnings },
-        set (newVal) { this.editedItem.net_earnings = newVal }
-      }
     }
   }
 </script>

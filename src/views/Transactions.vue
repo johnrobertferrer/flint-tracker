@@ -96,7 +96,7 @@
           rounded="lg"
         >
           <datatable 
-            :data="datatable.data"
+            :data="rebuildDatatableData"
             :headers="datatable.headers"
             :settings="datatable.settings"
           />
@@ -126,7 +126,7 @@
             { text: 'Withdrawal', value: 'withdrawal' },
             { text: 'Incentives', value: 'incentives' },
             { text: 'Net Payout', value: 'net_payout' },
-            { text: 'Name', value: 'project_name' },
+            { text: 'Project Name', value: 'project_name' },
             { text: 'Invested Amount', value: 'invested_amount' },
             { text: 'Net Earnings', value: 'net_earnings' },
             { text: 'Actions', value: 'actions', sortable: false },
@@ -137,7 +137,7 @@
               details: 'test 1',
               top_up: 159,
               withdrawal: 6.0,
-              incentives: 24,
+              incentives: 2423,
               net_payout: 4.0,
               project_name: 'Candon Fire Station 2',
               invested_amount: 5000,
@@ -148,7 +148,7 @@
               details: 'test 2',
               top_up: 237,
               withdrawal: 9.0,
-              incentives: 37,
+              incentives: 3721,
               net_payout: 4.3,
               project_name: 'Fire Station 1',
               invested_amount: 5000,
@@ -164,30 +164,59 @@
 
     methods: {
       formatNumeric(number) {
+        if (isNaN(number) || number === null) { return null; }
         return Number(parseFloat(number).toFixed(2)).toLocaleString('en');
       },
+      parseNumeric(number) {
+        if (isNaN(number) || number === null) { return null; }
+        // return parseFloat(number.replace(/,/g, ''));
+        // console.log('number', number);
+        return number;
+      },
+      sumTwoItems(a, b) {
+        if (typeof a === 'string') { a = parseFloat(a.replace(/[^\d\.\-]/g, "")); }
+        if (typeof b === 'string') { b = parseFloat(b.replace(/[^\d\.\-]/g, "")); }
+        return a + b;
+      },
       getTotalTopUp() {
-        return this.formatNumeric(this.datatable.data.map(data => data.top_up).reduce((prev, next) => prev + next));
+        return this.formatNumeric(this.datatable.data.map(data => data.top_up).reduce((prev, next) => this.sumTwoItems(prev, next)));
       },
       getTotalWithdrawal() {
-        return this.formatNumeric(this.datatable.data.map(data => data.withdrawal).reduce((prev, next) => prev + next));
+        return this.formatNumeric(this.datatable.data.map(data => data.withdrawal).reduce((prev, next) => this.sumTwoItems(prev, next)));
       },
       getTotalIncentives() {
-        return this.formatNumeric(this.datatable.data.map(data => data.incentives).reduce((prev, next) => prev + next));
+        return this.formatNumeric(this.datatable.data.map(data => data.incentives).reduce((prev, next) => this.sumTwoItems(prev, next)));
       },
       getTotalNetPayout() {
-        return this.formatNumeric(this.datatable.data.map(data => data.net_payout).reduce((prev, next) => prev + next));
+        return this.formatNumeric(this.datatable.data.map(data => data.net_payout).reduce((prev, next) => this.sumTwoItems(prev, next)));
       },
       getTotalRemainingPayout() {
-        return this.formatNumeric(this.datatable.data.map(data => data.invested_amount).reduce((prev, next) => prev + next)
-              - this.datatable.data.map(data => data.net_payout).reduce((prev, next) => prev + next));
+        return this.formatNumeric(this.datatable.data.map(data => data.invested_amount).reduce((prev, next) => this.sumTwoItems(prev, next))
+        - this.datatable.data.map(data => data.net_payout).reduce((prev, next) => this.sumTwoItems(prev, next)));
       },
       getTotalInvestedAmount() {
-        return this.formatNumeric(this.datatable.data.map(data => data.invested_amount).reduce((prev, next) => prev + next));
+        return this.formatNumeric(this.datatable.data.map(data => data.invested_amount).reduce((prev, next) => this.sumTwoItems(prev, next)));
       },
       getTotalNetEarnings() {
-        return this.formatNumeric(this.datatable.data.map(data => data.net_earnings).reduce((prev, next) => prev + next));
+        return this.formatNumeric(this.datatable.data.map(data => data.net_earnings).reduce((prev, next) => this.sumTwoItems(prev, next)));
       }
+    },
+
+    computed: {
+      rebuildDatatableData() {
+        let that = this;
+
+        this.datatable.data.forEach(element => {
+          element.top_up = that.formatNumeric(element.top_up);
+          element.withdrawal = that.formatNumeric(element.withdrawal);
+          element.incentives = that.formatNumeric(element.incentives);
+          element.net_payout = that.formatNumeric(element.net_payout);
+          element.invested_amount = that.formatNumeric(element.invested_amount);
+          element.net_earnings = that.formatNumeric(element.net_earnings);
+        });
+
+        return this.datatable.data;
+      },
     }
   }
 </script>

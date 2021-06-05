@@ -24,6 +24,7 @@
       tabs: [
         {   url: '/', label: 'Dashboard'   },
         {   url: '/transactions', label: 'Transactions'   },
+        {   url: '/projects', label: 'Projects'   },
         {   url: '/reports', label: 'Reports'   },
         {   url: '/settings', label: 'Settings'   }
       ]
