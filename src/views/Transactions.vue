@@ -7,6 +7,21 @@
       >
         <v-sheet
           rounded="lg"
+        >
+          <datatable 
+            :data="rebuildDatatableData"
+            :headers="datatable.headers"
+            :settings="datatable.settings"
+          />
+        </v-sheet>
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="12"
+      >
+        <v-sheet
+          rounded="lg"
           class="py-4 px-2 d-flex flex-column flex-md-row"
         >
           <v-card
@@ -87,21 +102,6 @@
           </v-card>
         </v-sheet>
       </v-col>
-
-      <v-col
-        cols="12"
-        sm="12"
-      >
-        <v-sheet
-          rounded="lg"
-        >
-          <datatable 
-            :data="rebuildDatatableData"
-            :headers="datatable.headers"
-            :settings="datatable.settings"
-          />
-        </v-sheet>
-      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -120,7 +120,7 @@
       return {
         datatable: {
           headers: [
-            { text: 'Date', align: 'start', sortable: false, value: 'date' },
+            { text: 'Date', align: 'start', value: 'date' },
             { text: 'Details', align: 'start', sortable: false, value: 'details' },
             { text: 'Top Up', value: 'top_up' },
             { text: 'Withdrawal', value: 'withdrawal' },
