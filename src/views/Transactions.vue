@@ -107,6 +107,7 @@
 </template>
 
 <script>
+  import axios from 'axios';
   import TransactionsDatatable from '../components/datatables/TransactionsDatatable.vue';
 
   export default {
@@ -114,6 +115,21 @@
 
     components: {
       'datatable': TransactionsDatatable
+    },
+
+    mounted() {
+      console.log('axios mounted');
+      axios.get(`https://pselookup.vrymel.com/api/stocks/`, {
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(e => {
+        console.log(errors)
+      })
     },
 
     data() {
